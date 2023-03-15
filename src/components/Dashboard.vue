@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-area" :style="`height: ${window_height - 30}px`">
-    <bookings-manager v-show="state === 'schedule'"/>
-    <guests-manager v-show="state === 'customers'"/>
+    <bookings-manager v-if="state === 'schedule'"/>
+    <guests-manager v-if="state === 'customers'"/>
   </div>
 </template>
 

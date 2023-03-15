@@ -12,19 +12,21 @@
                                   color="#9c4239" valid-color="#7ca474" error-color="#ba1a1a"
                                   :translations="phone_translations"
                                   v-model="number"/>
-          <small class="card-text error">{{ error }}</small>
+          <small class="card-text error">{{ error }}</small><br>
           <button class="btn btn-primary shadow-none" @click="get_code()">Получить код</button>
         </div>
         <div v-if="state === 'code'">
-          <p class="card-text  text-muted">СМС с кодом подтверждения отправлено на номер
+          <p class="card-text text-muted">СМС с кодом подтверждения отправлено на номер
             <br>
-            +7 {{number}}.</p>
+            +7 {{ number }}.</p>
           <pincode-input v-model="code"/>
-          <p class="card-text error">{{ error }}</p>
+          <br>
+          <small class="card-text error">{{ error }}</small>
           <button class="btn btn-primary shadow-none" @click="check_code()">Подтвердить</button>
           <br>
-          <button class="btn btn-link text-muted shadow-none"  style="font-size: small; margin: 0"
-                  @click="state = 'number'">Изменить номер</button>
+          <button class="btn btn-link text-muted shadow-none" style="font-size: small; margin: 0"
+                  @click="state = 'number'">Изменить номер
+          </button>
         </div>
       </div>
     </div>
@@ -43,24 +45,29 @@ export default {
       state: 'number',
       number: '',
       code: '',
+      userId: 31,
       error: '\n'
     }
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     get_code: function () {
+      console.log({
+        phone: '+7 ' + this.number,
+        expectedRole: 'ADMIN'
+      })
       if (this.phone_re.exec(this.number)) {
         axios
           .post(this.url('/auth/login'), {
-            phone: '+7' + this.number.replace(/[- ]/, ''),
+            phone: '+7 ' + this.number,
             expectedRole: 'ADMIN'
           })
           .then((response) => {
             if (response.data.status === 'FAIL') {
               this.error = 'Ошибка доступа'
             } else {
-              this.error = '\n'
+              this.error = ''
+              this.userId = response.data.userId ? response.data.userId : 31
               this.state = 'code'
             }
           })
@@ -71,7 +78,16 @@ export default {
     check_code: function () {
       if (this.code.length === 4) {
         this.error = ''
-        Event.fire('authorised')
+        axios
+          .post(this.url('/auth/confirm-number'), {
+            userId: this.userId,
+            code: this.code
+          })
+          .then((response) => {
+            if (response.data.status === 'SUCCESS') {
+              Event.fire('authorised', response.data.user)
+            }
+          })
       } else {
         this.error = 'Пожалуйста, проверьте корректность ввода'
       }

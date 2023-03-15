@@ -23,7 +23,13 @@
              v-model="booking.participants" @change="$forceUpdate()"/>
     </form-group48>
     <form-group48 class="margin" title="Дата:">
-      <date-picker format="DD.MM.YYYY, HH:00" class="date-picker" v-model="booking.date" style="width: 100%"/>
+      <date-picker format="DD.MM.YYYY, HH:00" class="date-picker" style="width: 100%"
+                   :class="checked && !(booking.date.getHours() >= 12 || booking.date.getHours() === 0) ? 'is-invalid' : ''"
+                   v-model="booking.date" @change="booking.date.setMinutes(0)"/>
+    </form-group48>
+    <form-group48 style="margin-top: -15px; text-align: end; padding-right: 14px;">
+      <small :class="checked && !hecked && !(booking.date.getHours() >= 12 || booking.date.getHours() === 0)  ? 'error' : 'text-muted'">
+        Часы бронирования с 12:00 до 00:00</small>
     </form-group48>
     <form-group48 class="margin" title="Стол:">
       <select class="form-select" v-model="booking.table" @change="$forceUpdate()">
@@ -71,13 +77,14 @@ export default {
     check: function () {
       this.checked = true
       return !this.is_empty(this.booking.name) && this.phone_re.exec(this.booking.number) &&
+        (this.booking.date.getHours() >= 12 || this.booking.date.getHours() === 0) &&
         0 < this.booking.participants && this.booking.participants <= this.booking.table.capacity
     },
     create_booking: function () {
       if (this.check()) {
         this.booking.date.setMinutes(0)
         this.booking.time = this.format_time(this.booking.date.getHours(), 0)
-        this.booking.timeFrom = this.booking.date.toISOString()
+        this.booking.timeFrom = this.toISOString(this.booking.date)
         this.booking.tableName = this.booking.table.name
         this.booking.tableId = this.booking.table.id
         this.booking.phone = '+7 ' + this.booking.number
@@ -87,7 +94,9 @@ export default {
             this.booking.id = response.data.id
             this.booking.status = 'CREATED'
             Event.fire('add-booking', this.booking)
-          })
+          }).catch((error) => {
+            this.error = `Стол ${this.booking.tableName} занят в заданное время.`
+        })
       } else {
         this.error = 'Проверьте корректность заполнения полей.'
       }

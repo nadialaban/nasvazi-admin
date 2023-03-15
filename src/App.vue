@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      state: 'dashboard',
+      state: 'login',
       admin: {
         name: 'Надя'
       }
@@ -35,6 +35,7 @@ export default {
   methods: {},
   created() {
     Event.listen('authorised', () => this.state = 'dashboard')
+    Event.listen('exit', () => this.state = 'login')
   }
 }
 </script>

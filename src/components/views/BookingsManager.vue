@@ -1,7 +1,10 @@
 <template>
   <div>
-    <foo name="booking" width="600px" height="530px">
-      <booking-editor :tables="tables"/>
+    <foo name="booking" width="600px" height="550px">
+      <div class="center-content" style="top: 270px; position: relative;" v-if="flags.done">
+        <h5 style="color: #7ca474">Бронь успешно создана!</h5>
+      </div>
+      <booking-editor :tables="tables" v-else/>
     </foo>
 
     <foo name="bonus" width="600px" height="200px">
@@ -174,7 +177,6 @@ export default {
       this.$modal.show('bonus')
     },
     add_bonus_save: function () {
-      this.current_booking.userId = 27 // fixme
       axios
         .post(this.url('/user/add-bonus'), {
           userId: this.current_booking.userId,
@@ -189,6 +191,7 @@ export default {
         })
     },
     add_booking: function () {
+      this.flags.done = false
       this.$modal.show('booking')
     },
     load_bookings: function () {
@@ -205,6 +208,9 @@ export default {
             booking.time = this.format_time(booking.startTime[3], booking.startTime[4])
             return booking
           })
+          this.data.sort((a, b) => {
+            return a.startTime[3] < b.startTime[3] ? -1 : a.startTime[3] > b.startTime[3] ? 1 : 0
+          })
           this.loading = false
         })
     }
@@ -214,11 +220,22 @@ export default {
     this.load_tables()
 
     Event.listen('add-booking', (booking) => {
-      booking.formatted_date = this.format_date(booking.date.getDate(), booking.date.getMonth())
-      booking.time = this.format_time(booking.date.getHours(), booking.date.getMinutes())
-      this.data.push(booking)
-      this.$modal.hide('booking')
+      this.flags.done = true
+      if (this.toISOString(this.filters.date).split('T')[0] === this.toISOString(booking.date).split('T')[0]) {
+        booking.formatted_date = this.format_date(booking.date.getDate(), booking.date.getMonth())
+        booking.time = this.format_time(booking.date.getHours(), booking.date.getMinutes())
+        this.data.push(booking)
+        this.data.sort((a, b) => {
+          return a.startTime[3] < b.startTime[3] ? -1 : a.startTime[3] > b.startTime[3] ? 1 : 0
+        })
+      }
+      setTimeout(() => this.$modal.hide('booking'), 2000)
     })
+  },
+  mounted() {
+    this.load_bookings()
+    this.$modal.hide('booking')
+    this.$modal.hide('bonus')
   }
 }
 </script>

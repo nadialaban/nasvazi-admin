@@ -1,14 +1,21 @@
 <template>
   <div style="background-color: #fbf3f3">
     <!-- Списание бонусов -->
-    <foo name="bonus" width="600px" height="200px">
+    <foo name="bonus" width="600px" height="210px">
       <div class="container" v-if="!flags.done">
         <h5>Списание баллов</h5>
         <span>Бонусные баллы будут списаны у пользователя {{ current_user.name }} ({{ current_user.phone }})</span>
         <form-group48 class="margin" title="Количество:">
           <input type="number" min="0" step="1" :max="current_user.bonus" class="form-control shadow-none"
+                 :class="flags.checked && !(0 < current_user.reduce_bonus && current_user.reduce_bonus <= current_user.bonus) ? 'is-invalid' : ''"
                  v-model="current_user.reduce_bonus" @change="$forceUpdate()"/>
         </form-group48>
+        <form-group48 style="margin: -10px">
+          <small class="card-text error" v-if="flags.checked && current_user.reduce_bonus > current_user.bonus" >Нельзя списать больше баллов, чем есть у гостя ({{current_user.bonus}})</small>
+          <small class="card-text error" v-else-if="flags.checked && 0 > current_user.reduce_bonus">Нельзя списать количество баллов меньше 0.</small>
+          <br v-else>
+        </form-group48>
+        <br>
         <button class="btn btn-primary" @click="reduce_bonus_save()">
           Списать бонусы ({{ current_user.reduce_bonus }})
         </button>
@@ -75,6 +82,7 @@ export default {
       loading: true,
       current_user: {},
       flags: {
+        checked: false,
         done: false
       },
       data: [],
@@ -106,29 +114,32 @@ export default {
     reduce_bonus: function (user) {
       this.current_user = user
       this.current_user.reduce_bonus = 0
+      this.flags.checked = false
       this.flags.done = false
       this.$modal.show('bonus')
     },
     reduce_bonus_save: function () {
-      axios
-        .post(this.url('/user/reduce-bonus'), {
-          userId: this.current_user.id,
-          bonus: this.current_user.reduce_bonus
-        })
-        .then((response) => {
-          this.flags.done = true
-          this.current_user.bonus -= this.current_user.reduce_bonus
-          this.current_user.reduce_bonus = 0
-          this.$forceUpdate()
-          setTimeout(() => this.$modal.hide('bonus'), 2000)
-        })
-    },
-    download: function () {
-
+      this.flags.checked = true
+      if (0 < this.current_user.reduce_bonus && this.current_user.reduce_bonus <= this.current_user.bonus) {
+        axios
+          .post(this.url('/user/reduce-bonus'), {
+            userId: this.current_user.id,
+            bonus: this.current_user.reduce_bonus
+          })
+          .then((response) => {
+            this.flags.done = true
+            this.current_user.bonus -= this.current_user.reduce_bonus
+            this.current_user.reduce_bonus = 0
+            this.$forceUpdate()
+            setTimeout(() => this.$modal.hide('bonus'), 3000)
+          })
+      }
     }
   },
-  created() {
+  mounted() {
+    console.log(1)
     this.load_users()
+    this.$modal.hide('bonus')
   }
 }
 </script>

@@ -59,6 +59,9 @@ Vue.mixin({
     },
     is_empty: function (str) {
       return !str || str === ''
+    },
+    toISOString: function (date) {
+      return `${date.getFullYear()}-${this.zero_pad(date.getMonth() + 1)}-${date.getDate()}T${this.zero_pad(date.getHours())}:00:00.000Z`
     }
   },
   computed: {
