@@ -1,7 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   plugins: [
@@ -81,7 +80,6 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    }),
-    new Dotenv()
+    })
   ])
 }
