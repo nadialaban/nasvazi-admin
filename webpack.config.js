@@ -51,6 +51,7 @@ module.exports = {
     extensions: ['*', '.js', '.vue', '.json'],
   },
   devServer: {
+    writeToDisk: true,
     historyApiFallback: true,
     noInfo: true,
     overlay: true
