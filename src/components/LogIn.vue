@@ -60,6 +60,8 @@ export default {
         axios
           .post(this.url('/auth/login'), {
             phone: '+7 ' + this.number,
+            chatId: '',
+            name: '',
             expectedRole: 'ADMIN'
           })
           .then((response) => {

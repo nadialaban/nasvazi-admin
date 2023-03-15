@@ -28,7 +28,8 @@
                    v-model="booking.date" @change="booking.date.setMinutes(0)"/>
     </form-group48>
     <form-group48 style="margin-top: -15px; text-align: end; padding-right: 14px;">
-      <small :class="checked && !hecked && !(booking.date.getHours() >= 12 || booking.date.getHours() === 0)  ? 'error' : 'text-muted'">
+      <small
+        :class="checked && !(booking.date.getHours() >= 12 || booking.date.getHours() === 0)  ? 'error' : 'text-muted'">
         Часы бронирования с 12:00 до 00:00</small>
     </form-group48>
     <form-group48 class="margin" title="Стол:">
@@ -94,9 +95,10 @@ export default {
             this.booking.id = response.data.id
             this.booking.status = 'CREATED'
             Event.fire('add-booking', this.booking)
-          }).catch((error) => {
+          })
+          .catch((error) => {
             this.error = `Стол ${this.booking.tableName} занят в заданное время.`
-        })
+          })
       } else {
         this.error = 'Проверьте корректность заполнения полей.'
       }
