@@ -54,6 +54,8 @@ export default {
     get_code: function () {
       console.log({
         phone: '+7 ' + this.number,
+        chatId: '',
+        name: '',
         expectedRole: 'ADMIN'
       })
       if (this.phone_re.exec(this.number)) {
