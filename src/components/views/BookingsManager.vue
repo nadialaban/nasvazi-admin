@@ -25,7 +25,7 @@
     </foo>
 
     <!-- Фильтры -->
-    <div class="row" style="margin-left: -55px">
+    <div class="row">
       <span class="col-1 align-self-center" style="text-align: right">Дата:</span>
       <div class="col-3">
         <date-picker format="DD.MM.YYYY" class="date-picker" v-model="filters.date" @change="update()"/>
@@ -40,7 +40,7 @@
           </option>
         </select>
       </div>
-      <div class="col-2 align-self-center" style="text-align: left;">
+      <div class="col-4 align-self-center" style="text-align: left;">
         <button class="btn btn-sm btn-primary" style="height: 34px; margin: 0"
                 @click="add_booking()">Создать бронь
         </button>
