@@ -17,7 +17,7 @@ import da from "vue2-datepicker/locale/es/da";
 import VModal from 'vue-js-modal/dist/index.nocss.js'
 import 'vue-js-modal/dist/styles.css'
 
-window.Event = new class {
+window.myEvent = new class {
   constructor() {
     this.vue = new Vue();
   }
@@ -41,12 +41,26 @@ window.Event = new class {
 
 Vue.mixin({
   methods: {
-    url: function (route) {
-      return 'https://nasvazi.herokuapp.com' + route
+    url: function (route, params=undefined) {
+      let url_params = ''
+      if (params) {
+        let p = Object.entries(params).map(([key, value]) => `${key}=${value}`)
+        url_params = '?' + p.join('&')
+      }
+      return 'https://nasvazi.herokuapp.com' + route + url_params
     },
     start_of_day: function (date) {
       date.setHours(0, 0, 0, 0)
       return date
+    },
+    end_of_day: function (date) {
+      date.setHours(23, 59, 59, 0)
+      return date
+    },
+    add_days: function (date, days) {
+      let new_date = new Date(date.valueOf());
+      new_date.setDate(new_date.getDate() + days);
+      return new_date;
     },
     format_time: function (hours, minutes) {
       return `${this.zero_pad(hours)}:${this.zero_pad(minutes)}`
@@ -61,7 +75,10 @@ Vue.mixin({
       return !str || str === ''
     },
     toISOString: function (date) {
-      return `${date.getFullYear()}-${this.zero_pad(date.getMonth() + 1)}-${date.getDate()}T${this.zero_pad(date.getHours())}:00:00.000Z`
+      return `${this.format_full_date(date)}T${this.zero_pad(date.getHours())}:00:00.000Z`
+    },
+    format_full_date: function (date) {
+      return `${date.getFullYear()}-${this.zero_pad(date.getMonth() + 1)}-${this.zero_pad(date.getDate())}`
     }
   },
   computed: {

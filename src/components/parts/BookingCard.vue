@@ -34,8 +34,6 @@
 
 
 <script>
-import tr from "vue2-datepicker/locale/es/tr";
-
 export default {
   name: "BookingCard",
   props: {

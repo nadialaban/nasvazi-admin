@@ -23,7 +23,7 @@ export default {
     },
     change_state: function (state) {
       this.state = state
-      Event.fire('change-dashboard-state', state)
+      myEvent.fire('change-dashboard-state', state)
     }
   }
 }

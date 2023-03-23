@@ -89,7 +89,7 @@ export default {
           })
           .then((response) => {
             if (response.data.status === 'SUCCESS') {
-              Event.fire('authorised', response.data.user)
+              myEvent.fire('authorised', response.data.user)
             }
           })
       } else {

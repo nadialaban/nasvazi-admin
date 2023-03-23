@@ -23,7 +23,7 @@ export default {
   computed: {},
   methods: {},
   created() {
-    Event.listen('change-dashboard-state', (state) => this.state = state)
+    myEvent.listen('change-dashboard-state', (state) => this.state = state)
   }
 }
 </script>

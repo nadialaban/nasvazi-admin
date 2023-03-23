@@ -21,7 +21,7 @@ export default {
         },
         callback: confirm => {
           if (confirm) {
-            Event.fire('exit')
+            myEvent.fire('exit')
           }
         }
       })

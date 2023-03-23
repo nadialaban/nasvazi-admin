@@ -89,12 +89,13 @@ export default {
         this.booking.tableName = this.booking.table.name
         this.booking.tableId = this.booking.table.id
         this.booking.phone = '+7 ' + this.booking.number
+        this.booking.platform = 'WEB'
         axios
           .post(this.url('/booking/create'), this.booking)
           .then((response) => {
             this.booking.id = response.data.id
             this.booking.status = 'CREATED'
-            Event.fire('add-booking', this.booking)
+            myEvent.fire('add-booking', this.booking)
           })
           .catch((error) => {
             this.error = `Стол ${this.booking.tableName} занят в заданное время.`

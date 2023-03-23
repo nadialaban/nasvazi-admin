@@ -33,8 +33,12 @@
       </download-excel>
     </div>
 
+    <div class="content-container" :style="`top: ${window_height / 2}px;`" v-if="flags.loading">
+      <loading/>
+    </div>
+
     <!-- Табличка -->
-    <table class="table table-striped align-middle" style="font-size: 12px">
+    <table class="table table-striped align-middle" style="font-size: 12px" v-else>
       <thead style="color: #410002">
       <tr>
         <th scope="col">#</th>
@@ -73,15 +77,16 @@
 <script>
 import axios from "axios";
 import FormGroup48 from "../parts/FormGroup-4-8.vue";
+import Loading from "../parts/Loading.vue";
 
 export default {
   name: "GuestsManager",
-  components: {FormGroup48},
+  components: {Loading, FormGroup48},
   data() {
     return {
-      loading: true,
       current_user: {},
       flags: {
+        loading: true,
         checked: false,
         done: false
       },
@@ -104,11 +109,15 @@ export default {
   },
   methods: {
     load_users: function () {
+      this.flags.loading = true
       axios.get(this.url('/user/all')).then((response) => {
         this.data = response.data.users.map(user => {
           user.reg_date = `${this.zero_pad(user.addDate[2])}.${this.zero_pad(user.addDate[1])}.${user.addDate[0]}`
           return user
         })
+        setTimeout(() => {
+          this.flags.loading = false
+        }, 1000)
       })
     },
     reduce_bonus: function (user) {
@@ -137,7 +146,6 @@ export default {
     }
   },
   mounted() {
-    console.log(1)
     this.load_users()
     this.$modal.hide('bonus')
   }

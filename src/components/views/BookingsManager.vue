@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #fbf3f3">
     <foo name="booking" width="600px" height="550px">
       <div class="center-content" style="top: 270px; position: relative;" v-if="flags.done">
         <h5 style="color: #7ca474">Бронь успешно создана!</h5>
@@ -48,10 +48,10 @@
     </div>
     <hr>
     <!-- Данные -->
-    <div class="content-container" :style="`top: ${window_height / 2}px;`" v-if="loading">
+    <div class="content-container" :style="`top: ${window_height / 2}px;`" v-if="flags.loading">
       <loading/>
     </div>
-    <div class="row" style="padding-right: 15px;" v-if="!loading">
+    <div class="row" style="padding-right: 15px;" v-if="!flags.loading">
       <div v-if="!filtered_data.length">
         Нет броней по заданным фильтрам
       </div>
@@ -87,7 +87,6 @@ export default {
   components: {FormGroup48, BookingCard, Loading, BookingEditor},
   data() {
     return {
-      loading: true,
       filters: {
         date: undefined,
         table: undefined
@@ -96,6 +95,7 @@ export default {
       data: [],
       current_booking: {},
       flags: {
+        loading: true,
         done: false
       }
     }
@@ -195,7 +195,7 @@ export default {
       this.$modal.show('booking')
     },
     load_bookings: function () {
-      this.loading = true
+      this.flags.loading = true
       let date = `${this.filters.date.getFullYear()}-` +
         `${this.zero_pad(this.filters.date.getMonth() + 1)}-` +
         `${this.zero_pad(this.filters.date.getDate())}`
@@ -211,7 +211,9 @@ export default {
           this.data.sort((a, b) => {
             return a.startTime[3] < b.startTime[3] ? -1 : a.startTime[3] > b.startTime[3] ? 1 : 0
           })
-          this.loading = false
+          setTimeout(() => {
+            this.flags.loading = false
+          }, 1000)
         })
     }
   },
@@ -219,7 +221,7 @@ export default {
     this.clear_filters()
     this.load_tables()
 
-    Event.listen('add-booking', (booking) => {
+    myEvent.listen('add-booking', (booking) => {
       this.flags.done = true
       if (this.toISOString(this.filters.date).split('T')[0] === this.toISOString(booking.date).split('T')[0]) {
         booking.formatted_date = this.format_date(booking.date.getDate(), booking.date.getMonth())

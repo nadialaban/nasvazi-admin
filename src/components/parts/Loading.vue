@@ -43,7 +43,7 @@ export default {
   border-top-color: #9c4239;
   border-radius: 50%;
   box-sizing: border-box;
-  animation: spring-spinner-animation 3.7s ease-in-out infinite;
+  animation: spring-spinner-animation 2s ease-in-out infinite;
   transform: rotate(-200deg);
 }
 
