@@ -34,8 +34,8 @@ export default {
   },
   methods: {},
   created() {
-    Event.listen('authorised', () => this.state = 'dashboard')
-    Event.listen('exit', () => this.state = 'login')
+    myEvent.listen('authorised', () => this.state = 'dashboard')
+    myEvent.listen('exit', () => this.state = 'login')
   }
 }
 </script>
