@@ -2,7 +2,7 @@
   <div class="header">
     <h6 style="margin-left: 10px; position: absolute;">
       <span class="material-symbols-outlined">settings</span>
-      Панель администратора ({{ admin }})</h6>
+      Панель администратора</h6>
     <button class="btn btn-sm btn-link text-right exit" @click="exit()">Выйти</button>
   </div>
 </template>
@@ -10,7 +10,6 @@
 <script>
 export default {
   name: "DashboardHeader",
-  props: ['admin'],
   methods: {
     exit: function () {
       this.$confirm({

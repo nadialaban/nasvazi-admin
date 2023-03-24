@@ -4,6 +4,8 @@
             :style="btn_color('schedule')">Расписание</button>
     <button class="btn btn-block" @click="change_state('customers')"
             :style="btn_color('customers')">Гости</button>
+    <button class="btn btn-block" @click="change_state('statistics')"
+            :style="btn_color('statistics')">Аналитика</button>
 
     <img :src="images.logo" alt="">
   </div>
@@ -14,7 +16,7 @@ export default {
   name: "DashboardMenu",
   data() {
     return {
-      state: 'schedule'
+      state: 'statistics'
     }
   },
   methods: {

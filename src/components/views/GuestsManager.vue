@@ -45,9 +45,6 @@
         <th scope="col">Имя</th>
         <th scope="col">Номер</th>
         <th class="vl" scope="col">Регистрация</th>
-        <th scope="col">Броней всего</th>
-        <th scope="col">Подтверждено</th>
-        <th class="vl" scope="col">Отменено</th>
         <th scope="col" colspan="2">Бонусы</th>
       </tr>
       </thead>
@@ -57,9 +54,6 @@
         <td style="font-weight: 600">{{ user.name }}</td>
         <td>{{ user.phone }}</td>
         <td class="vl">{{ user.reg_date }}</td>
-        <td style="font-weight: 800;">{{ user.totalBookings }}</td>
-        <td style="color: #7ca474; font-weight: 800">{{ user.confirmedBookings }}</td>
-        <td class="vl" style="color: #ba1a1a; font-weight: 800">{{ user.cancelledBookings }}</td>
         <td>{{ user.bonus }}</td>
         <td>
           <button class="btn btn-sm btn-link" style="margin: 0"

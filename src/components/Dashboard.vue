@@ -2,19 +2,20 @@
   <div class="dashboard-area" :style="`height: ${window_height - 30}px`">
     <bookings-manager v-if="state === 'schedule'"/>
     <guests-manager v-if="state === 'customers'"/>
+    <statistics-presenter v-if="state === 'statistics'"/>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import Loading from "./parts/Loading.vue";
 import BookingsManager from "./views/BookingsManager.vue";
 import GuestsManager from "./views/GuestsManager.vue";
+import StatisticsPresenter from "./views/StatisticsPresenter.vue";
 
 
 export default {
   name: "Dashboard",
-  components: {GuestsManager, BookingsManager, Loading},
+  components: {StatisticsPresenter, GuestsManager, BookingsManager, Loading},
   data() {
     return {
       state: 'schedule'

@@ -3,9 +3,9 @@
     <vue-confirm-dialog/>
     <log-in v-if="state === 'login'"/>
     <div v-if="state === 'dashboard'">
-      <dashboard-header :admin="admin.name"/>
+      <dashboard-header/>
       <dashboard-menu/>
-      <dashboard :admin="admin"/>
+      <dashboard/>
     </div>
   </div>
 </template>
@@ -27,9 +27,6 @@ export default {
   data() {
     return {
       state: 'login',
-      admin: {
-        name: 'Надя'
-      }
     }
   },
   methods: {},
